@@ -1,16 +1,19 @@
-const express = require('express');
-const path = require('path');
-
+const express = require("express");
+const path = require("path");
+const fs = require("fs");
 const app = express();
+const port = process.env.PORT || 3001;
 
-const PORT = process.env.PORT || 3333;
-
-app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'index.html'));
+// Serve the index.html file from the current directory
+app.get("/", (req, res) => {
+  const indexPath = path.join(__dirname, "index.html");
+  const htmlContent = fs.readFileSync(indexPath, "utf8");
+  res.type('html').send(htmlContent);
 });
 
-app.use(express.static(__dirname));
-
-app.listen(PORT, () => {
-  console.log(`Server is running at https://xyron-monaco.onrender.com`);
+const server = app.listen(port, () => {
+  console.log(`Example app listening on port ${port}!`);
 });
+
+server.keepAliveTimeout = 120 * 1000;
+server.headersTimeout = 120 * 1000;
